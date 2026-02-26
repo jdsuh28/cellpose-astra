@@ -484,7 +484,7 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
             train_losses[iepoch] += train_loss
         train_losses[iepoch] /= nimg_per_epoch
 
-        if iepoch == 5 or iepoch % 10 == 0:
+        if True:
             lavgt = 0.
             if test_data is not None or test_files is not None:
                 np.random.seed(42)
@@ -526,19 +526,16 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
                 test_losses[iepoch] = lavgt
             lavg /= nsum
             train_logger.info(
-                f"{iepoch}, train_loss={lavg:.4f}, test_loss={lavgt:.4f}, LR={LR[iepoch]:.6f}, time {time.time()-t0:.2f}s"
+                f"{iepoch+1}, train_loss={lavg:.4f}, test_loss={lavgt:.4f}, LR={LR[iepoch]:.6f}, time {time.time()-t0:.2f}s"
             )
             lavg, nsum = 0, 0
 
-        if iepoch == n_epochs - 1 or (iepoch % save_every == 0 and iepoch != 0):
-            if save_each and iepoch != n_epochs - 1:  #separate files as model progresses
-                filename0 = str(filename) + f"_epoch_{iepoch:04d}"
-            else:
-                filename0 = filename
+        if ((iepoch + 1) % save_every == 0) and (iepoch != n_epochs - 1):
+            filename0 = str(filename) + f"_epoch_{(iepoch+1):04d}"  # QUPATH_PATCH_EPOCH_SUFFIX
             train_logger.info(f"saving network parameters to {filename0}")
             net.save_model(filename0)
     
-    net.save_model(filename)
+    net.save_model(f"{filename}_epoch_{n_epochs:04d}")  # QUPATH_PATCH_NO_BASE_SAVE
 
     if original_net_dtype is not None:
         net.dtype = original_net_dtype
