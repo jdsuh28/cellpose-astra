@@ -11,7 +11,7 @@ ASTRA --- Automated Structural Tissue Research & Analysis
 
 ## Upstream base
 
--   Cellpose v4.0.8\
+-   Cellpose v4.0.8
 -   Original repository: https://github.com/MouseLand/cellpose
 
 ------------------------------------------------------------------------
@@ -61,10 +61,10 @@ This installs the exact deterministic backend used by ASTRA.
 
 ## Scope
 
--   No upstream tracking\
--   No general-purpose feature development\
--   Modifications limited strictly to ASTRA training integration\
--   Tags are immutable\
+-   No upstream tracking
+-   No general-purpose feature development
+-   Modifications limited strictly to ASTRA training integration
+-   Tags are immutable
 -   `astra.N` increments only when training behavior changes
 
 This repository exists solely to guarantee deterministic,
