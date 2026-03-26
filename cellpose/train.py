@@ -429,7 +429,9 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
     filename = save_path / "models" / model_name
     (save_path / "models").mkdir(exist_ok=True)
 
-    train_logger.info(f">>> saving model to {filename}")
+    # ASTRA START
+    # train_logger.info(f">>> saving model to {filename}")
+    # ASTRA END
 
     lavg, nsum = 0, 0
     train_losses, test_losses = np.zeros(n_epochs), np.zeros(n_epochs)
@@ -484,7 +486,9 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
             train_losses[iepoch] += train_loss
         train_losses[iepoch] /= nimg_per_epoch
 
+        # ASTRA START
         if True:
+        # ASTRA END
             lavgt = 0.
             if test_data is not None or test_files is not None:
                 np.random.seed(42)
@@ -525,17 +529,25 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
                 lavgt /= len(rperm)
                 test_losses[iepoch] = lavgt
             lavg /= nsum
+            # ASTRA START
             train_logger.info(
                 f"{iepoch+1}, train_loss={lavg:.4f}, test_loss={lavgt:.4f}, LR={LR[iepoch]:.6f}, time {time.time()-t0:.2f}s"
             )
+            # ASTRA END
             lavg, nsum = 0, 0
 
+        # ASTRA START
         if ((iepoch + 1) % save_every == 0) and (iepoch != n_epochs - 1):
-            filename0 = str(filename) + f"_epoch_{(iepoch+1):04d}"  # QUPATH_PATCH_EPOCH_SUFFIX
+            filename0 = str(filename) + f"_epoch_{(iepoch+1):04d}"
             train_logger.info(f"saving network parameters to {filename0}")
             net.save_model(filename0)
+        # ASTRA END
     
-    net.save_model(f"{filename}_epoch_{n_epochs:04d}")  # QUPATH_PATCH_NO_BASE_SAVE
+    # ASTRA START
+    filename0 = f"{filename}_epoch_{n_epochs:04d}"
+    train_logger.info(f"saving network parameters to {filename0}")
+    net.save_model(filename0)
+    # ASTRA END
 
     if original_net_dtype is not None:
         net.dtype = original_net_dtype
