@@ -169,7 +169,9 @@ def _train_cellposemodel_cli(args, logger, image_filter, device, pretrained_mode
             save_each=args.save_each,
             model_name=args.model_name_out)[0]
     model.pretrained_model = cpmodel_path
+    # ASTRA START
     logger.info(">>>> model trained and saved to %s" % cpmodel_path)
+    # ASTRA END
     return model
 
 
