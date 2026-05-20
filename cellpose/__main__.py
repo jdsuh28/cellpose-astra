@@ -151,6 +151,12 @@ def _train_cellposemodel_cli(args, logger, image_filter, device, pretrained_mode
     # initialize model
     model = models.CellposeModel(device=device, pretrained_model=pretrained_model)
 
+    # ASTRA START
+    save_path = os.path.realpath(args.dir)
+    if len(args.astra_model_save_root) > 0:
+        save_path = os.path.realpath(args.astra_model_save_root)
+    # ASTRA END
+
     # train segmentation model
     cpmodel_path = train.train_seg(
             model.net, images, labels, train_files=image_names,
@@ -164,7 +170,7 @@ def _train_cellposemodel_cli(args, logger, image_filter, device, pretrained_mode
             min_train_masks=args.min_train_masks,
             nimg_per_epoch=args.nimg_per_epoch,
             nimg_test_per_epoch=args.nimg_test_per_epoch,
-            save_path=os.path.realpath(args.dir), 
+            save_path=save_path, 
             save_every=args.save_every,
             save_each=args.save_each,
             model_name=args.model_name_out)[0]

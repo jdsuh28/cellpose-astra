@@ -229,6 +229,11 @@ def get_arg_parser():
         "--model_name_out", default=None, type=str,
         help="Name of model to save as, defaults to name describing model architecture. "
         "Model is saved in the folder specified by --dir in models subfolder.")
+    # ASTRA START
+    training_args.add_argument(
+        "--astra_model_save_root", default=[], type=str,
+        help="ASTRA-only training checkpoint parent. If set, models are saved in this folder's models subfolder instead of --dir/models.")
+    # ASTRA END
     
     # TODO: remove deprecated in future version
     training_args.add_argument(
