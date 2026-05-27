@@ -153,8 +153,8 @@ def _train_cellposemodel_cli(args, logger, image_filter, device, pretrained_mode
 
     # ASTRA START
     save_path = os.path.realpath(args.dir)
-    if len(args.astra_model_save_root) > 0:
-        save_path = os.path.realpath(args.astra_model_save_root)
+    if len(args.model_save_root) > 0:
+        save_path = os.path.realpath(args.model_save_root)
     # ASTRA END
 
     # train segmentation model

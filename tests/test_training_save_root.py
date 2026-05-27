@@ -14,7 +14,7 @@ class _DummyModel:
         self.pretrained_model = None
 
 
-class AstraTrainingSaveRootTest(unittest.TestCase):
+class TrainingSaveRootTest(unittest.TestCase):
 
     def _minimal_train_args(self, train_dir, **overrides):
         values = dict(
@@ -34,7 +34,7 @@ class AstraTrainingSaveRootTest(unittest.TestCase):
             save_every=1,
             save_each=False,
             model_name_out="astra_test_model",
-            astra_model_save_root=[],
+            model_save_root=[],
             dir=str(train_dir),
         )
         values.update(overrides)
@@ -64,10 +64,10 @@ class AstraTrainingSaveRootTest(unittest.TestCase):
             )
         return captured, model
 
-    def test_astra_model_save_root_cli_argument_is_optional_and_defaults_to_upstream_behavior(self):
+    def test_model_save_root_cli_argument_is_optional_and_defaults_to_upstream_behavior(self):
         args = get_arg_parser().parse_args(["--train", "--dir", "/tmp/astra-train"])
 
-        self.assertEqual([], args.astra_model_save_root)
+        self.assertEqual([], args.model_save_root)
 
     def test_training_save_path_defaults_to_dir_models_parent(self):
         with tempfile.TemporaryDirectory() as tmp:
@@ -83,7 +83,7 @@ class AstraTrainingSaveRootTest(unittest.TestCase):
                 model.pretrained_model,
             )
 
-    def test_astra_training_save_root_writes_sibling_models_parent(self):
+    def test_model_save_root_writes_sibling_models_parent(self):
         with tempfile.TemporaryDirectory() as tmp:
             training_root = Path(tmp) / "training" / "nucleus"
             train_dir = training_root / "train"
@@ -93,7 +93,7 @@ class AstraTrainingSaveRootTest(unittest.TestCase):
             args = self._minimal_train_args(
                 train_dir,
                 test_dir=str(test_dir),
-                astra_model_save_root=str(training_root),
+                model_save_root=str(training_root),
             )
 
             captured, model = self._capture_training_save_path(args)
