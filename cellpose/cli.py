@@ -109,8 +109,8 @@ def get_arg_parser():
         "--min_size", required=False, default=15, type=int,
         help="minimum number of pixels per mask, can turn off with -1")
     algorithm_args.add_argument(
-        "--flow3D_smooth", required=False, default=0, type=float,
-        help="stddev of gaussian for smoothing of dP for dynamics in 3D, default of 0 means no smoothing")
+        "--flow3D_smooth", required=False, default=0, type=float, nargs='+',
+        help="stddev of gaussian for smoothing of dP for dynamics in 3D, default of 0 means no smoothing. If you are seeing increased fragmentation along the Z axis, or ring-artifacts, you can specify increased smoothing in the z-axis by providing a list, e.g. `--flow3D_smooth 2 1 1`.  Pass a list of values to allow smoothing of the ZYX axes independently")
     algorithm_args.add_argument(
         "--flow_threshold", default=0.4, type=float, help=
         "flow error threshold, 0 turns off this optional QC step. Default: %(default)s")
@@ -229,11 +229,6 @@ def get_arg_parser():
         "--model_name_out", default=None, type=str,
         help="Name of model to save as, defaults to name describing model architecture. "
         "Model is saved in the folder specified by --dir in models subfolder.")
-    # ASTRA START
-    training_args.add_argument(
-        "--model_save_root", default=[], type=str,
-        help="ASTRA-only training checkpoint parent. If set, models are saved in this folder's models subfolder instead of --dir/models.")
-    # ASTRA END
     
     # TODO: remove deprecated in future version
     training_args.add_argument(

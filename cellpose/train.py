@@ -319,7 +319,7 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
     Train the network with images for segmentation.
 
     Args:
-        net (object): The network model to train. If `net` is a bfloat16 model on MPS, it will be converted to float32 for training. The saved models will be in float32, but the original model will be returned in bfloat16 for consistency. CUDA/CPU will train in bfloat16 if that is the provided net dtype.
+        net (object): The network model to train. If `net` is a bfloat16 model it will be converted to float32 for training. The saved models will be in float32, but the original model will be returned as the original dtype for consistency. 
         train_data (List[np.ndarray], optional): List of arrays (2D or 3D) - images for training. Defaults to None.
         train_labels (List[np.ndarray], optional): List of arrays (2D or 3D) - labels for train_data, where 0=no masks; 1,2,...=mask labels. Defaults to None.
         train_files (List[str], optional): List of strings - file names for images in train_data (to save flows for future runs). Defaults to None.
@@ -356,13 +356,11 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
 
     device = net.device
 
-    original_net_dtype = None
-    if device.type == 'mps' and net.dtype == torch.bfloat16:
+    original_net_dtype = net.dtype 
+    if net.dtype == torch.bfloat16:
         # NOTE: this produces a side effect of returning a network that is not of a guaranteed dtype \
-        original_net_dtype = torch.bfloat16 
-        train_logger.warning("Training with bfloat16 on MPS is not supported, using float32 network instead")
+        train_logger.info(">>> converting bfloat16 network to float32 for training")
         net.dtype = torch.float32
-        net.to(torch.float32)
 
     scale_range = 0.5 if scale_range is None else scale_range
 
@@ -429,9 +427,7 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
     filename = save_path / "models" / model_name
     (save_path / "models").mkdir(exist_ok=True)
 
-    # ASTRA START
-    # train_logger.info(f">>> saving model to {filename}")
-    # ASTRA END
+    train_logger.info(f">>> saving model to {filename}")
 
     lavg, nsum = 0, 0
     train_losses, test_losses = np.zeros(n_epochs), np.zeros(n_epochs)
@@ -464,11 +460,8 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
             X = torch.from_numpy(imgi).to(device)
             lbl = torch.from_numpy(lbl).to(device)
 
-            if X.dtype != net.dtype:
-                X = X.to(net.dtype)
-                lbl = lbl.to(net.dtype)
-
-            y = net(X)[0]
+            with torch.autocast(device_type=device.type, dtype=net.dtype):
+                y = net(X)[0]
             loss = _loss_fn_seg(lbl, y, device)
             if y.shape[1] > 3:
                 loss3 = _loss_fn_class(lbl, y, class_weights=class_weights)
@@ -486,9 +479,7 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
             train_losses[iepoch] += train_loss
         train_losses[iepoch] /= nimg_per_epoch
 
-        # ASTRA START
-        if True:
-        # ASTRA END
+        if iepoch == 5 or iepoch % 10 == 0:
             lavgt = 0.
             if test_data is not None or test_files is not None:
                 np.random.seed(42)
@@ -514,11 +505,8 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
                         X = torch.from_numpy(imgi).to(device)
                         lbl = torch.from_numpy(lbl).to(device)
 
-                        if X.dtype != net.dtype:
-                            X = X.to(net.dtype)
-                            lbl = lbl.to(net.dtype)
-                        
-                        y = net(X)[0]
+                        with torch.autocast(device_type=device.type, dtype=net.dtype):
+                            y = net(X)[0]
                         loss = _loss_fn_seg(lbl, y, device)
                         if y.shape[1] > 3:
                             loss3 = _loss_fn_class(lbl, y, class_weights=class_weights)
@@ -529,28 +517,22 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
                 lavgt /= len(rperm)
                 test_losses[iepoch] = lavgt
             lavg /= nsum
-            # ASTRA START
             train_logger.info(
-                f"{iepoch+1}, train_loss={lavg:.4f}, test_loss={lavgt:.4f}, LR={LR[iepoch]:.6f}, time {time.time()-t0:.2f}s"
+                f"{iepoch}, train_loss={lavg:.4f}, test_loss={lavgt:.4f}, LR={LR[iepoch]:.6f}, time {time.time()-t0:.2f}s"
             )
-            # ASTRA END
             lavg, nsum = 0, 0
 
-        # ASTRA START
-        if ((iepoch + 1) % save_every == 0) and (iepoch != n_epochs - 1):
-            filename0 = str(filename) + f"_epoch_{(iepoch+1):04d}"
+        if iepoch == n_epochs - 1 or (iepoch % save_every == 0 and iepoch != 0):
+            if save_each and iepoch != n_epochs - 1:  #separate files as model progresses
+                filename0 = str(filename) + f"_epoch_{iepoch:04d}"
+            else:
+                filename0 = filename
             train_logger.info(f"saving network parameters to {filename0}")
             net.save_model(filename0)
-        # ASTRA END
     
-    # ASTRA START
-    filename0 = Path(f"{filename}_epoch_{n_epochs:04d}")
-    train_logger.info(f"saving network parameters to {filename0}")
-    net.save_model(filename0)
-    # ASTRA END
-
-    if original_net_dtype is not None:
+    net.save_model(filename)
+    if original_net_dtype != torch.float32:
+        train_logger.info(f">>> converting network back to {original_net_dtype} after training")
         net.dtype = original_net_dtype
-        net.to(original_net_dtype)
 
-    return filename0, train_losses, test_losses
+    return filename, train_losses, test_losses
