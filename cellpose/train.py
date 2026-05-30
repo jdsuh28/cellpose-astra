@@ -544,7 +544,7 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
         # ASTRA END
     
     # ASTRA START
-    filename0 = f"{filename}_epoch_{n_epochs:04d}"
+    filename0 = Path(f"{filename}_epoch_{n_epochs:04d}")
     train_logger.info(f"saving network parameters to {filename0}")
     net.save_model(filename0)
     # ASTRA END
@@ -553,4 +553,4 @@ def train_seg(net, train_data=None, train_labels=None, train_files=None,
         net.dtype = original_net_dtype
         net.to(original_net_dtype)
 
-    return filename, train_losses, test_losses
+    return filename0, train_losses, test_losses
