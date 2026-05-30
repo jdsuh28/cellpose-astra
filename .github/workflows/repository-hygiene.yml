@@ -1,0 +1,35 @@
+name: cellpose-astra repository hygiene
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hygiene:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Reject tracked generated and local files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          forbidden_regex='(^|/)(\.DS_Store|target|out|build|bin|\.gradle)(/|$)|(^|/)\._'
+          violations="$(git ls-files | grep -E "$forbidden_regex" || true)"
+
+          if [ -n "$violations" ]; then
+            echo "ERROR: Forbidden generated or local files are tracked:"
+            echo "$violations"
+            exit 1
+          fi
