@@ -18,6 +18,8 @@ jobs:
   test:
     name: ${{ matrix.platform }} py${{ matrix.python-version }}
     runs-on: ${{ matrix.platform }}
+    env:
+      TORCHINDUCTOR_CACHE_DIR: ${{ runner.temp }}/torchinductor-cache
     strategy:
       fail-fast: true
       matrix:
