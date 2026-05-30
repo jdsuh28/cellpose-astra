@@ -1,0 +1,48 @@
+name: ASTRA runtime boundary
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  boundary:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Verify ASTRA runtime boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          python -m py_compile \
+            cellpose/astra/__init__.py \
+            cellpose/astra/__main__.py \
+            cellpose/astra/cli.py \
+            cellpose/astra/train.py
+
+          for file in cellpose/train.py cellpose/cli.py cellpose/__main__.py; do
+            if grep -Eq 'ASTRA START|model_save_root|cellpose\.astra' "$file"; then
+              echo "ERROR: ASTRA hook leaked into upstream-owned runtime file: $file"
+              exit 1
+            fi
+          done
+
+          grep -q -- '--model_save_root' cellpose/astra/cli.py
+          grep -q 'cellpose_main()' cellpose/astra/__main__.py
+          grep -q 'astra_train.train_seg' cellpose/astra/__main__.py
