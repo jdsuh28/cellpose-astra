@@ -1,6 +1,6 @@
 # cellpose-astra
 
-Cellpose v4.0.8 (frozen) with ASTRA-specific deterministic training
+Cellpose v4.1.1 (frozen) with ASTRA-specific deterministic training
 modifications.
 
 This repository provides a version-locked Cellpose backend for:
@@ -11,7 +11,7 @@ ASTRA --- Automated Structural Tissue Research & Analysis
 
 ## Upstream base
 
--   Cellpose v4.0.8
+-   Cellpose v4.1.1
 -   Original repository: https://github.com/MouseLand/cellpose
 
 ------------------------------------------------------------------------
@@ -40,7 +40,7 @@ conda activate cellpose-astra
 
 ``` bash
 python -m pip install --upgrade pip
-python -m pip install "git+https://github.com/jdsuh28/cellpose-astra.git@v4.0.8+astra.1"
+python -m pip install "git+https://github.com/jdsuh28/cellpose-astra.git@v4.1.1+astra.1"
 ```
 
 ------------------------------------------------------------------------
@@ -53,7 +53,7 @@ cellpose --version
 
 Expected output:
 
-    cellpose version: 4.0.8+astra.1
+    cellpose version: 4.1.1+astra.1
 
 This installs the exact deterministic backend used by ASTRA.
 
