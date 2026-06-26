@@ -40,7 +40,7 @@ conda activate cellpose-astra
 
 ``` bash
 python -m pip install --upgrade pip
-python -m pip install "git+https://github.com/jdsuh28/cellpose-astra.git@v4.1.1+astra.1"
+python -m pip install "git+https://github.com/jdsuh28/cellpose-astra.git@v4.1.1+astra.3"
 ```
 
 ------------------------------------------------------------------------
@@ -53,7 +53,7 @@ cellpose --version
 
 Expected output:
 
-    cellpose version: 4.1.1+astra.1
+    cellpose version: 4.1.1+astra.3
 
 This installs the exact deterministic backend used by ASTRA.
 

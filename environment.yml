@@ -1,14 +1,15 @@
 name: cellpose
 dependencies:
-  - python==3.8.5
+  - python==3.10
   - pip
   - pip:
     - qtpy
 #    - PyQt5.sip
-    - numpy>=1.20.0
+    - numpy>=1.20.0,<2
     - scipy
-    - torch>=1.6
-    - opencv-python-headless
+    - torch==2.2.2
+    - torchvision==0.17.2
+    - opencv-python-headless<4.12
     - pyqtgraph>=0.11.0rc0
     - natsort
     - google-cloud-storage

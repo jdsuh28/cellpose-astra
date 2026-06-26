@@ -2,14 +2,14 @@ import setuptools
 from setuptools import setup
 
 install_deps = [
-    'numpy>=1.20.0',
+    'numpy>=1.20.0,<2',
     'scipy',
     'natsort',
     'tifffile',
     'tqdm',
-    'torch>=1.6',
-    'torchvision',
-    'opencv-python-headless',
+    'torch==2.2.2',
+    'torchvision==0.17.2',
+    'opencv-python-headless<4.12',
     'fastremap',
     'imagecodecs',
     'roifile',
