@@ -1,25 +1,43 @@
-Model
+Models
 -------------------------------
 
 ``from cellpose import models``
 
-The cpsam model weights will be downloaded automatically to your ``models.MODELS_DIR`` (see
+Built-in models 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+We have four built-in models available:
+
+* ``cpsam_v2``: this is the CellposeSAM model released in June 2026 using the SAM-ViTL backbone, it includes a fix in the training for low contrast regions
+* ``cpdino``: this is the CellposeDINO model released in June 2026 using the DINOv3-ViTL backbone
+* ``cpdino-vitb``: this is the CellposeDINO model released in June 2026 using the DINOv3-ViTB backbone (smaller model)
+* ``cpsam``: this is the original CellposeSAM model released in April 2025 using the SAM-ViTL backbone
+
+The DINO-based models use an image tile size of 384x384 by default, but this can be changed through the ``bsize`` parameter, 
+e.g. you may want to make ``bsize`` larger if there are very large or long objects in the image. The SAM-based models 
+use an image tile size of 256x256 and this cannot be changed - the position embeddings do not support different image sizes.
+
+You can select a model in the GUI in the drop-down, in a notebook with ``models.CellposeModel(pretrained_model='cpdino')``, 
+or on the command line with ``python -m cellpose --pretrained_model cpdino``.
+
+The first time that a model is used, the weights will be downloaded automatically to your ``models.MODELS_DIR`` (see
 Installation instructions for more details on MODELS_DIR). You can also directly
 download the model by going to the URL, e.g.:
 
-``https://huggingface.co/mouseland/cellpose-sam/blob/main/cpsam``
+``https://huggingface.co/mouseland/cellpose-sam/blob/main/cpdino``
 
-This model was trained on images with a range of diameters from 7.5 to 120 pixels. 
+These models were trained on images with a range of diameters from 7.5 to 120 pixels, with a mean size of 30 pixels. 
 If your images have even larger diameters, you may want to specify the diameter parameter, 
-e.g. specifying ``diameter=60`` with downsample the image by a factor of 2 
-(downsampling is respect to 30).
+e.g. specifying ``diameter=60`` will downsample the image by a factor of 2 
+(downsampling is with respect to 30 pixels). If you have cells with large diameters, 
+then you may need to increase the ``niter`` parameter to run the dynamics step for mask creation for longer.
 
 
 User-trained models
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-By default, models are trained with the images and ROIs not resized, and expects that 
-the testing images will have a similar diameter distribution as the training data.
+By default, models are fine-tuned on your images and ROIs with a small range of image resizing in the augmentations.
+Thus, the testing images should have a similar ROI diameter distribution as the training data.
 
 These models can be loaded and used in the notebook with e.g.
 ``models.CellposeModel(pretrained_model='name_in_gui')``  or with the full path

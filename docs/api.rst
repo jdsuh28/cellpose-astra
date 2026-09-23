@@ -55,11 +55,20 @@ Plot functions
    :members:
 
 
-Transformer class
+Transformer classes
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. autoclass:: cellpose.vit_sam.Transformer
+.. autoclass:: cellpose.vit.BaseModel
    :members:
+
+
+.. autoclass:: cellpose.vit.CPSAM
+   :members:
+
+
+.. autoclass:: cellpose.vit.CPDINO
+   :members:
+
 
 
 Core functions

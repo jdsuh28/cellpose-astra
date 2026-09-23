@@ -31,13 +31,11 @@ this code at the beginning of your notebook before you import cellpose:
 M1-M3 Mac installation
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Support for M1-M3 should work out-of-the-box with Cellpose now! Please submit an issue if it's not working.
-
-From the command line you can choose the Mac device explicitly with
+If you specify ``--use_gpu`` on the command line, Cellpose will automatically use the MPS acceleration for Apple Silicon if you have a compatible version of PyTorch installed. Please submit an issue if it's not working.
 
 ::
 
-   python -m cellpose --dir path --gpu_device mps --use_gpu
+   python -m cellpose --dir path --use_gpu
 
 AMD GPU ROCm installation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~

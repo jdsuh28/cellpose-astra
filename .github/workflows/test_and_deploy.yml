@@ -1,6 +1,6 @@
 # ASTRA-supported Cellpose runtime tests.
 # ASTRA installs this fork by Git tag, so this workflow does not publish to PyPI.
-# The supported runtime is Python 3.10 only; macOS is opt-in because the full
+# The supported runtime is Python 3.11 only; macOS is opt-in because the full
 # upstream-style macOS test run is much slower than the ASTRA release gate.
 
 name: tests
@@ -15,7 +15,7 @@ on:
   workflow_dispatch:
     inputs:
       include_macos:
-        description: "Also run the slow macOS Python 3.10 tox job"
+        description: "Also run the slow macOS Python 3.11 tox job"
         required: false
         default: "false"
         type: choice
@@ -32,7 +32,7 @@ jobs:
       fail-fast: false
       matrix:
         platform: [ubuntu-latest, windows-latest]
-        python-version: ["3.10"]
+        python-version: ["3.11"]
 
     steps:
       - uses: actions/checkout@v6
@@ -41,7 +41,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'python_requires=">=3.10,<3.11"' setup.py
+          grep -q 'python_requires=">=3.11,<3.12"' setup.py
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v6
@@ -62,7 +62,7 @@ jobs:
         uses: codecov/codecov-action@v6
 
   manual_macos:
-    name: macos-latest py3.10
+    name: macos-latest py3.11
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.include_macos == 'true' }}
     runs-on: macos-latest
     timeout-minutes: 120
@@ -74,12 +74,12 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          grep -q 'python_requires=">=3.10,<3.11"' setup.py
+          grep -q 'python_requires=">=3.11,<3.12"' setup.py
 
-      - name: Set up Python 3.10
+      - name: Set up Python 3.11
         uses: actions/setup-python@v6
         with:
-          python-version: "3.10"
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |

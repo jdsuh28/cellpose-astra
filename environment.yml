@@ -5,11 +5,11 @@ dependencies:
   - pip:
     - qtpy
 #    - PyQt5.sip
-    - numpy>=1.20.0,<2
-    - scipy
-    - torch==2.2.2
-    - torchvision==0.17.2
-    - opencv-python-headless<4.12
+    - numpy==2.2.6
+    - scipy==1.15.3
+    - torch==2.10.0
+    - torchvision==0.25.0
+    - opencv-python-headless==4.13.0.92
     - pyqtgraph>=0.11.0rc0
     - natsort
     - google-cloud-storage
@@ -27,4 +27,5 @@ dependencies:
     - dask_jobqueue
     - bokeh
     - fill-voids
+    - git+https://github.com/facebookresearch/dinov3@6876159a11b4df116f30f667f8c9888617df0751
   

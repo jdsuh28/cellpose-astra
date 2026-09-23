@@ -36,8 +36,8 @@ def main():
 
     if (args.pretrained_model is None or args.pretrained_model == "None" or
             args.pretrained_model == "False" or args.pretrained_model == "0"):
-        pretrained_model = "cpsam"
-        logger.warning("training from scratch is disabled, using 'cpsam' model")
+        pretrained_model = "cpsam_v2"
+        logger.warning("training from scratch is disabled, using 'cpsam_v2' model")
     else:
         pretrained_model = args.pretrained_model
 

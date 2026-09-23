@@ -2,19 +2,19 @@ import setuptools
 from setuptools import setup
 
 install_deps = [
-    'numpy>=1.20.0,<2',
-    'scipy',
+    'numpy==2.2.6',
+    'scipy==1.15.3',
     'natsort',
     'tifffile',
     'tqdm',
-    'torch==2.2.2',
-    'torchvision==0.17.2',
-    'opencv-python-headless<4.12',
+    'torch==2.10.0',
+    'torchvision==0.25.0',
+    'opencv-python-headless==4.13.0.92',
     'fastremap',
     'imagecodecs',
     'roifile',
     'fill-voids',
-    'segment_anything'
+    'segment_anything',
 ]
 
 image_deps = ['nd2', 'pynrrd']
@@ -46,17 +46,6 @@ bioimageio_deps = [
 ]
 
 try:
-    import torch
-    a = torch.ones(2, 3)
-    from importlib.metadata import version
-    ver = version("torch")
-    major_version, minor_version, _ = ver.split(".")
-    if major_version == "2" or int(minor_version) >= 6:
-        install_deps.remove("torch>=1.6")
-except:
-    pass
-
-try:
     import PyQt6
     gui_deps.remove("pyqt6")
     gui_deps.remove("pyqt6.sip")
@@ -85,7 +74,7 @@ setup(
     author_email="stringerc@janelia.hhmi.org",
     description="anatomical segmentation algorithm", long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/MouseLand/cellpose", setup_requires=[
+    url="https://github.com/jdsuh28/cellpose-astra", setup_requires=[
         'pytest-runner',
         'setuptools_scm',
     ], packages=setuptools.find_packages(), use_scm_version=True,

@@ -1,78 +1,41 @@
 # cellpose-astra
 
-Cellpose v4.1.1 (frozen) with ASTRA-specific deterministic training
-modifications.
-
-This repository provides a version-locked Cellpose backend for:
-
-ASTRA --- Automated Structural Tissue Research & Analysis
-
-------------------------------------------------------------------------
+Cellpose v4.2.1.1 with an isolated ASTRA deterministic-training interface.
+The upstream runtime includes `cpsam_v2`, `cpdino`, `cpdino-vitb`, and the
+original `cpsam` model.
 
 ## Upstream base
 
--   Cellpose v4.1.1
--   Original repository: https://github.com/MouseLand/cellpose
+- Cellpose v4.2.1.1
+- https://github.com/MouseLand/cellpose
 
-------------------------------------------------------------------------
+## Candidate installation
 
-## Installation (deterministic environment)
-
-### 1. Create environment
-
-Using mamba (recommended):
-
-``` bash
+```bash
 mamba create -n cellpose-astra python=3.11 -y
 mamba activate cellpose-astra
+python -m pip install \
+  "git+https://github.com/jdsuh28/cellpose-astra.git@upgrade/cpsam-v2"
+python -m pip install \
+  "git+https://github.com/facebookresearch/dinov3@6876159a11b4df116f30f667f8c9888617df0751"
 ```
 
-Or using conda:
+Verify with:
 
-``` bash
-conda create -n cellpose-astra python=3.11 -y
-conda activate cellpose-astra
-```
-
-------------------------------------------------------------------------
-
-### 2. Install the Python 3.11 revision
-
-``` bash
-python -m pip install --upgrade pip
-python -m pip install "git+https://github.com/jdsuh28/cellpose-astra.git@<verified-commit>"
-```
-
-------------------------------------------------------------------------
-
-### 3. Verify installation
-
-``` bash
+```bash
 cellpose --version
+python -m cellpose.astra --version
 ```
 
-Confirm the installed package's Git commit matches the verified commit supplied
-with the ASTRA deployment. The immutable `v4.1.1+astra.3` tag retains its
-original Python 3.10 requirement.
+## ASTRA boundary
 
-------------------------------------------------------------------------
+Upstream inference and training modules remain upstream-owned. ASTRA adds a
+separate `cellpose.astra` entry point for deterministic checkpoint naming and
+an optional `--model_save_root` training destination. Boundary tests reject
+ASTRA hooks in the upstream runtime files.
 
-## Scope
-
--   No upstream tracking
--   No general-purpose feature development
--   Modifications limited strictly to ASTRA training integration
--   Tags are immutable
--   `astra.N` increments only when training behavior changes
-
-This repository exists solely to guarantee deterministic,
-validation-restricted training semantics for ASTRA workflows.
-
-------------------------------------------------------------------------
+Stable releases use immutable tags after runtime validation.
 
 ## License
 
-This repository is a derivative work of Cellpose and retains the
-original Howard Hughes Medical Institute (HHMI) license.
-
-See LICENSE for full terms.
+This derivative retains the original Cellpose license. See `LICENSE`.
