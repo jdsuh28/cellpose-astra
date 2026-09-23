@@ -23,24 +23,24 @@ ASTRA --- Automated Structural Tissue Research & Analysis
 Using mamba (recommended):
 
 ``` bash
-mamba create -n cellpose-astra python=3.10 -y
+mamba create -n cellpose-astra python=3.11 -y
 mamba activate cellpose-astra
 ```
 
 Or using conda:
 
 ``` bash
-conda create -n cellpose-astra python=3.10 -y
+conda create -n cellpose-astra python=3.11 -y
 conda activate cellpose-astra
 ```
 
 ------------------------------------------------------------------------
 
-### 2. Install pinned release
+### 2. Install the Python 3.11 revision
 
 ``` bash
 python -m pip install --upgrade pip
-python -m pip install "git+https://github.com/jdsuh28/cellpose-astra.git@v4.1.1+astra.3"
+python -m pip install "git+https://github.com/jdsuh28/cellpose-astra.git@<verified-commit>"
 ```
 
 ------------------------------------------------------------------------
@@ -51,11 +51,9 @@ python -m pip install "git+https://github.com/jdsuh28/cellpose-astra.git@v4.1.1+
 cellpose --version
 ```
 
-Expected output:
-
-    cellpose version: 4.1.1+astra.3
-
-This installs the exact deterministic backend used by ASTRA.
+Confirm the installed package's Git commit matches the verified commit supplied
+with the ASTRA deployment. The immutable `v4.1.1+astra.3` tag retains its
+original Python 3.10 requirement.
 
 ------------------------------------------------------------------------
 
